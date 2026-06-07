@@ -89,11 +89,12 @@ jobs:
     - name: Replace Maintainer Avatar
       if: inputs.MAINTAINER_AVATAR_URL != ''
       run: |
-        AVATAR_PATH="${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}/gui/theme/portrait_hdpi/images/Default/About/maintainer.png"
-        if [ -f "$AVATAR_PATH" ]; then
+        AVATAR_PATH=$(find ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }} -name "maintainer.png" | head -n 1)
+        echo "Found: $AVATAR_PATH"
+        if [ -n "$AVATAR_PATH" ]; then
           aria2c -o "$AVATAR_PATH" --allow-overwrite=true "${{ inputs.MAINTAINER_AVATAR_URL }}"
         else
-          echo "maintainer.png not found, skipping."
+          echo "maintainer.png not found anywhere, skipping."
         fi
 
     - name: Building OrangeFox
